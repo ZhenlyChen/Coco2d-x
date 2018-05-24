@@ -8,7 +8,17 @@ public:
     static cocos2d::Scene* createScene();
 
     virtual bool init();
-        
+
+	/// <param name='dir'>方向： 0 - w, 1 - a, 2 - s, 3 - d</param>  
+	virtual void buttonWASDCallBack(Ref* pSender, int dir);
+
+	/// <param name='type'>类型 0 - x, 1 - y</param>
+	virtual void buttonXYCallBack(Ref* pSender, int type);
+
+	void updateTime(float dt);
+
+	void playerMove(int offsetX, int offsetY);
+
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 private:
