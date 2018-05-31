@@ -107,12 +107,12 @@ bool HelloWorld::init()
 	auto buttonS = MenuItemLabel::create(labelS, CC_CALLBACK_1(HelloWorld::buttonWASDCallBack, this, 2));
 	auto buttonD = MenuItemLabel::create(labelD, CC_CALLBACK_1(HelloWorld::buttonWASDCallBack, this, 3));
 
-	buttonX->setPosition(Vec2(visibleSize.width - 140, 50));
+	buttonX->setPosition(Vec2(visibleSize.width - 140, 30));
 	buttonY->setPosition(Vec2(visibleSize.width - 100, 80));
 	buttonW->setPosition(Vec2(100, 80));
-	buttonA->setPosition(Vec2(70, 50));
-	buttonS->setPosition(Vec2(100, 50));
-	buttonD->setPosition(Vec2(130, 50));
+	buttonA->setPosition(Vec2(50, 30));
+	buttonS->setPosition(Vec2(100, 30));
+	buttonD->setPosition(Vec2(150, 30));
 
 	auto menu = Menu::create(buttonX, buttonY, buttonW, buttonA, buttonS, buttonD, NULL);
 	menu->setPosition(Vec2::ZERO);
@@ -149,6 +149,12 @@ bool HelloWorld::init()
 		case EventKeyboard::KeyCode::KEY_DOWN_ARROW:
 		case EventKeyboard::KeyCode::KEY_S:
 			playerMove(0, -10);
+			break;
+		case EventKeyboard::KeyCode::KEY_J:
+			buttonXYCallBack(nullptr, 0);
+			break;
+		case EventKeyboard::KeyCode::KEY_K:
+			buttonXYCallBack(nullptr, 1);
 			break;
 		}
 	};
@@ -197,8 +203,8 @@ void HelloWorld::playerMove(int offsetX, int offsetY) {
 		postion.y + offsetY < 30 || postion.y + offsetY > visibleSize.height - 30 ||
 		(player->getActionByTag(634) != nullptr && !(player->getActionByTag(634)->isDone())) ||
 		(player->getActionByTag(534) != nullptr && !(player->getActionByTag(534)->isDone()))) return;
-	auto animation = Animation::createWithSpriteFrames(run, 0.05f);
-	auto move = MoveBy::create(0.4f, Vec2(offsetX, offsetY));
+	auto animation = Animation::createWithSpriteFrames(run, 0.01f);
+	auto move = MoveBy::create(0.1f, Vec2(offsetX, offsetY));
 	auto action = Spawn::createWithTwoActions(Animate::create(animation), move);
 	action->setTag(634);
 	player->runAction(action);
@@ -211,13 +217,23 @@ void HelloWorld::buttonXYCallBack(Ref* pSender, int type) {
 	Animation* animation;
 	if (type == 0) {
 		animation = Animation::createWithSpriteFrames(dead, 0.1f);
-		if (pT->getPercentage() >= 10) pT->setPercentage(pT->getPercentage() - 10);
+		schedule(schedule_selector(HelloWorld::subProgress), 0.1f, 10, 0);
 	} else {
 		animation = Animation::createWithSpriteFrames(attack, 0.1f);
-		if (pT->getPercentage() <= 90) pT->setPercentage(pT->getPercentage() + 10);
+		schedule(schedule_selector(HelloWorld::addProgress), 0.1f, 10, 0);
 	}
 	auto idleAnimation = Animation::createWithSpriteFrames(idle, 0.1f);
 	auto action = Sequence::create(Animate::create(animation), Animate::create(idleAnimation), nullptr);
 	action->setTag(534);
 	player->runAction(action);
+}
+
+
+void HelloWorld::addProgress(float dt) {
+	if (pT->getPercentage() >= 1) pT->setPercentage(pT->getPercentage() - 1);
+}
+
+void HelloWorld::subProgress(float dt) {
+	if (pT->getPercentage() <= 99) pT->setPercentage(pT->getPercentage() + 1);
+
 }

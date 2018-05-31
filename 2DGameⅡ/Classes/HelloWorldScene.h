@@ -17,6 +17,10 @@ public:
 
 	void updateTime(float dt);
 
+	void addProgress(float dt);
+
+	void subProgress(float dt);
+
 	void playerMove(int offsetX, int offsetY);
 
     // implement the "static create()" method manually
