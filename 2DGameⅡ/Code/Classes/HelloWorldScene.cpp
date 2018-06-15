@@ -423,7 +423,6 @@ void HelloWorld::subProgress(float dt) {
 				sprintf(sql, "insert into score values(1,'%d');", killCount);
 				rc = sqlite3_exec(pdb, sql, nullptr, nullptr, nullptr);
 			}
-			database->setIntegerForKey("killCount", killCount);
 			char dHighStr[30];
 			sprintf(dHighStr, "High Score: %d", killCount);
 			LabelHigh->setString(dHighStr);

@@ -4,7 +4,7 @@
 USING_NS_CC;
 
 using namespace CocosDenshion;
-#define OPEN true
+#define OPEN false
 
 Scene* Thunder::createScene() {
 	// 'scene' is an autorelease object
@@ -143,6 +143,7 @@ void Thunder::movePlane(char c) {
 
 //发射子弹
 void Thunder::fire() {
+	if (gameOver) return;
 	auto bullet = Sprite::create("bullet.png");
 	bullet->setAnchorPoint(Vec2(0.5, 0.5));
 	bullets.push_back(bullet);
@@ -222,6 +223,7 @@ void Thunder::meet(EventCustom * event) {
 	list<Sprite*>* pEnemys = &enemys;
 	list<Sprite*>* pBullets = &bullets;
 	for (auto enemy : enemys) {
+		if (enemy->getPosition().getDistance(player->getPosition()) < 50) stopAc();
 		for (auto bullet : bullets) {
 			if (enemy->getPosition().getDistance(bullet->getPosition()) < 25) {
 #if OPEN == true
@@ -252,7 +254,6 @@ void Thunder::meet(EventCustom * event) {
 		}
 	}
 	// 判断子弹是否打中陨石并执行对应操作
-
 }
 
 void Thunder::stopAc() {
@@ -337,7 +338,8 @@ bool Thunder::onTouchBegan(Touch *touch, Event *event) {
 	if (gameOver) return true;
 	if (touch->getLocation().getDistance(player->getPosition()) <= 30)
 		isClick = true;
-	fire();
+	else
+		fire();
 	return true;
 }
 

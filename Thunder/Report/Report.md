@@ -91,7 +91,38 @@ void Thunder::onTouchMoved(Touch *touch, Event *event) {
 
 
 
-## 子弹射击中事件
+## 子弹发射
+
+### 发射
+
+这里主要是将子弹添加到容器中，并且触发移动动画，当子弹出了边界的时候，就需要移除子弹
+
+```cpp
+void Thunder::fire() {
+	if (gameOver) return;
+	auto bullet = Sprite::create("bullet.png");
+	bullet->setAnchorPoint(Vec2(0.5, 0.5));
+	bullets.push_back(bullet);
+	bullet->setPosition(player->getPosition());
+	addChild(bullet, 1);
+	SimpleAudioEngine::getInstance()->playEffect("music/fire.wav");
+	// 移除飞出屏幕外的子弹
+	auto shotAnimate = MoveTo::create(1.0f, Vec2(bullet->getPosition().x, visibleSize.height));
+	list<Sprite*> *pBullets = &bullets;
+	auto action = Sequence::create(
+		shotAnimate,
+		CallFunc::create([pBullets, bullet] {
+			pBullets->remove(bullet);
+			bullet->removeFromParentAndCleanup(true);
+		}),
+		nullptr);
+	bullet->runAction(action);
+}
+```
+
+
+
+### 射中目标
 
 在`update`里面调用一个自定义事件
 
@@ -101,7 +132,44 @@ void Thunder::onTouchMoved(Touch *touch, Event *event) {
 
 然后石头执行爆炸动画，然后将其从列表中移除，子弹也需要被移除。
 
+而且在陨石与飞机距离过近的话也要触发游戏结束
 
+```cpp
+// 自定义碰撞事件
+void Thunder::meet(EventCustom * event) {
+	list<Sprite*>* pEnemys = &enemys;
+	list<Sprite*>* pBullets = &bullets;
+	for (auto enemy : enemys) {
+		if (enemy->getPosition().getDistance(player->getPosition()) < 50) stopAc();
+		for (auto bullet : bullets) {
+			if (enemy->getPosition().getDistance(bullet->getPosition()) < 25) {
+				SimpleAudioEngine::getInstance()->playEffect("music/explore.wav");
+				enemy->runAction(
+					Sequence::create(
+						CallFunc::create([bullet, pBullets, enemy, pEnemys] {
+							pEnemys->remove(enemy);
+                              bullet->removeFromParentAndCleanup(true);
+                              pBullets->remove(bullet);
+						}),
+						Animate::create(
+							Animation::createWithSpriteFrames(explore, 0.05f, 1)
+						),
+						CallFunc::create([enemy, pEnemys] {
+							enemy->removeFromParentAndCleanup(true);
+						}),
+						nullptr
+					)
+				);
+			}
+		}
+	}
+	// 判断子弹是否打中陨石并执行对应操作
+}
+```
+
+如果碰撞在一起的话，我们可以通过回调事件将对象从容器中移除，并且触发爆炸效果。
+
+![1529074600621](Report.assets/1529074600621-1529075180639.png)
 
 ## 音效
 
@@ -180,9 +248,7 @@ void Thunder::newEnemy() {
 }
 ```
 
-
-
-
+当陨石移动到屏幕底边的时候，就判定为游戏结束了![1529074624555](Report.assets/1529074624555.png)
 
 
 

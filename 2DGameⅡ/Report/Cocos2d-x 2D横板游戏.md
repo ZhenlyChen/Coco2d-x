@@ -211,5 +211,78 @@ UserDefault::getInstance()->getIntegerForKey("killCount", 100);
 
 
 
+当然，这里我使用了另一种方法，就是SQLite数据库
 
+首先把头文件引进来
+
+```cpp
+#include "sqlite3.h"
+```
+
+然后在场景初始化的时候读取数据，把最高分读取进来.
+
+首先时打开数据库，然后查询对应表有没有数据，如果有数据就读取出来。
+
+```cpp
+// 最高得分
+char dHighStr[30];
+//数据库指针
+sqlite3* pdb = nullptr;
+//数据库路径
+std::string path = FileUtils::getInstance()->getWritablePath() + "save.db";
+//根据路径path打开或创建数据库
+int result = sqlite3_open(path.c_str(), &pdb);
+//若成功result等于SQLITE_OK
+if (result == SQLITE_OK) {
+    char **re;//查询结果
+    int row, col;//行、列
+    sqlite3_get_table(pdb, "select * from score;", &re, &row, &col, NULL);
+    if (row == 0) {
+        std::string sql = "create table score(ID int primary key not null, number int);";
+        sqlite3_exec(pdb, sql.c_str(), nullptr, nullptr, nullptr);
+        highScore = 0;
+    }
+    else {
+        highScore = atoi(re[3]);
+    }
+} else {
+    highScore = 0;
+}
+// highScore = database->getIntegerForKey("killCount");
+sprintf(dHighStr, "High Score: %d", highScore);
+LabelHigh = Label::createWithTTF(dHighStr, "fonts/arial.ttf", 20);
+LabelHigh->setColor(Color3B(255, 255, 255));
+LabelHigh->setPosition(Vec2(visibleSize.width / 2, visibleSize.height - 15));
+this->addChild(LabelHigh, 1);
+```
+
+在游戏结束的时候，如果单局得分比最高得分高，那么就将得分存储到数据库中
+
+```cpp
+//数据库指针
+sqlite3* pdb = nullptr;
+//数据库路径
+std::string path = FileUtils::getInstance()->getWritablePath() + "save.db";
+//根据路径path打开或创建数据库
+int result = sqlite3_open(path.c_str(), &pdb);
+//若成功result等于SQLITE_OK
+if (result == SQLITE_OK) {
+    char sql[50] = "delete from score where id=1;";
+    int rc = sqlite3_exec( pdb, sql, nullptr, nullptr, nullptr);
+    sprintf(sql, "insert into score values(1,'%d');", killCount);
+    rc = sqlite3_exec(pdb, sql, nullptr, nullptr, nullptr);
+}
+```
+
+这里主要是使用SQL语句，而且没有涉及到回调操作，因此还是比较简单的。
+
+## 游戏截图
+
+![1529074335856](Cocos2d-x 2D横板游戏.assets/1529074335856-1529074533597.png)
+
+![1529074335856](Cocos2d-x 2D横板游戏.assets/1529074349228.png)
+
+
+
+![1529074359262](Cocos2d-x 2D横板游戏.assets/1529074359262.png)
 
