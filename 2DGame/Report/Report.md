@@ -178,12 +178,12 @@ eventListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event* even
 
 ## 结果
 
-![1527226036810](C:\Users\Zhenly\OneDrive\Study\大二\现代操作系统应用开发\Coco2d-x\2DGame\Report\Report.assets\1527226036810.png)
+![1527226036810](Report.assets\1527226036810.png)
 
 
 
-![1527226049329](C:\Users\Zhenly\OneDrive\Study\大二\现代操作系统应用开发\Coco2d-x\2DGame\Report\Report.assets\1527226049329.png)
+![1527226049329](Report.assets\1527226049329.png)
 
 
 
-![1527226068990](C:\Users\Zhenly\OneDrive\Study\大二\现代操作系统应用开发\Coco2d-x\2DGame\Report\Report.assets\1527226068990.png)
+![1527226068990](Report.assets\1527226068990.png)

@@ -33,7 +33,7 @@ void MenuScene::startMenuCallback(cocos2d::Ref * pSender){
 
 然后就可以得出以下效果
 
-![1526567021405](C:\Users\Zhenly\OneDrive\Study\大二\现代操作系统应用开发\Cocos2\Report.assets\1526567021405.png)
+![1526567021405](Report.assets\1526567021405.png)
 
 
 
@@ -76,7 +76,7 @@ mouseLayer->addChild(mouse, 2);
 
 然后就可以得到这个场景了：
 
-![1526567037775](C:\Users\Zhenly\OneDrive\Study\大二\现代操作系统应用开发\Cocos2\Report.assets\1526567037775.png)
+![1526567037775](Report.assets\1526567037775.png)
 
 然后触摸事件里面添加一些方法，使得点击的地方生成一个奶酪并且老鼠会移动过去。
 
@@ -102,7 +102,7 @@ this->addChild(newCheese, 1);
 
 然后就可以完成这个部分
 
-![1526567373987](C:\Users\Zhenly\OneDrive\Study\大二\现代操作系统应用开发\Cocos2\Report.assets\1526567373987.png)
+![1526567373987](Report.assets\1526567373987.png)
 
 最后需要发射石头到老鼠位置，并且老鼠留下钻石并随机逃跑。
 
@@ -124,7 +124,7 @@ Vec2 GameSence::getRandomVec2() {
 
 然后就可以实现最后的功能了。
 
-![1526567393546](C:\Users\Zhenly\OneDrive\Study\大二\现代操作系统应用开发\Cocos2\Report.assets\1526567393546.png)
+![1526567393546](Report.assets\1526567393546.png)
 
 这个项目做到这里基本就完成了，不过还有一个小问题，就是如果你在老鼠移动未完成的时候再次执行移动的动作，那么老鼠最终到达的位置就不会是指定的位置，这是因为他的移动未完成之前，再次调用移动就会导致新的移动的坐标叠加旧的移动的目标地址上，也就是说，如果在一个地方同时点击两次，那么老鼠就会移动两倍的距离，这是非常影响体验的。因此我这里作于一个改进
 
