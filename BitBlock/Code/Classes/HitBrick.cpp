@@ -3,7 +3,7 @@
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
 #define database UserDefault::getInstance()
-// #define MUSIC
+#define MUSIC
 
 USING_NS_CC;
 using namespace CocosDenshion;
